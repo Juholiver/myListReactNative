@@ -7,19 +7,26 @@ import {MaterialIcons, Octicons} from "@expo/vector-icons";
 import { themas } from "../../global/themes";
 import { Input } from "../../components/input";
 import { Button } from "../../components/Button";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
+import Routes from "../../routes/index.routes";
 
 export default function Login() {
-const [email, setEmail] = React.useState("");
-const [password, setPassword] = React.useState("");
-const [showPassword, setShowPassword] = React.useState(true);
-const [loading, setLoading] = React.useState(false);
+
+  const navigation = useNavigation<NavigationProp<any>>();
+
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [showPassword, setShowPassword] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
 
 async function getLogin() {
     try {
       setLoading(true);
       if (!email  || !password ) {
         return alert("Preencha todos os campos");
-      } setTimeout(() => { if(email == "teste@teste.com" && password == "123456"){ alert("Login realizado com sucesso"); }else { alert("Login ou senha incorretos"); }setLoading(false); }, 3000);
+      }
+      navigation.reset({routes:[{name:"BottomRoutes"}]});
+
     } catch (error) {
       console.log(error)
     }

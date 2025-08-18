@@ -3,26 +3,61 @@ import { Text, View, Dimensions , StyleSheet, TouchableOpacity} from "react-nati
 import { Modalize } from 'react-native-modalize';
 import {MaterialIcons}  from "@expo/vector-icons"
 import { Input } from "../components/input";
-
+import { themas } from "../global/themes";
+import { Flag } from "../components/Flag";
+import CustomDateTimePicker from "../components/CustomDateTimePicker";
 
 export const AuthContextList:any = React.createContext({})
 
+const flags = [
+  {caption: "urgente", Color: themas.colors.red},
+  {caption: "opcional", Color: themas.colors.blueLigth},
+]
+
 export const AuthProviderList = (props:any):any => {
   const modalizeRef = React.useRef<Modalize>(null);
+  const [title,setTitle] = React.useState("");
+  const [description,setDescription] = React.useState("");
+  const [selectedFlag,setSelectedFlag] = React.useState("Urgente");
+  const [selectedDate,setSelectedDate] = React.useState(new Date());
+  const [selectedTime,setSelectedTime] = React.useState(new Date());
+  const [showDatePicker, setShowDatePicker] = React.useState(false);
+  const [showTimePicker, setShowTimePicker] = React.useState(false);
 
   const onOpen = () => {
     modalizeRef?.current?.open();
+  };
+
+  const onClose = () => {
+    modalizeRef?.current?.close();
   };
 
   useEffect(() => {
     onOpen();
   }, []);
 
+const _renderFlags = () => {
+    return (
+      flags.map((item, index) => (
+          <TouchableOpacity key={index}>
+            <Flag caption={item.caption} color={item.Color} selected={true} />
+          </TouchableOpacity>
+        ))
+    );
+  };
+
+  const handleDateChange = (date: Date) => {
+    setSelectedDate(date);
+  };
+  const handleTimeChange = (date: Date) => {
+    setSelectedTime(date);
+  };
+
   const _container = () => {
     return (
       <View style={style.container}>
         <View style={style.header}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => onClose()}>
             <MaterialIcons name="close" size={30} />
           </TouchableOpacity>
           <Text style={style.title}>Criar tarefa</Text>
@@ -31,16 +66,25 @@ export const AuthProviderList = (props:any):any => {
           </TouchableOpacity>
         </View>
         <View style={style.content}>
-          <Input title="Titulo:" labelStyle={style.label} />
-          <Input title="Descricao" labelStyle={style.label} height={100} multiline numberOfLines={5} />
+          <Input title="Titulo:" labelStyle={style.label} value={title} onChangeText={setTitle} />
+          <Input title="Descricao" labelStyle={style.label} height={100} multiline numberOfLines={5} value={description} onChangeText={setDescription} textAlignVertical="top" />
 
           <View style={{width: "40%"}}>
-            <Input title="Tempo Limite" labelStyle={style.label} />
+            <View style={{flexDirection: "row", gap: 10,width: "100%"}}>
+              <TouchableOpacity onPress={() => setShowDatePicker(true)} style={{width: 200}}>
+                <Input title="Data Limite:" labelStyle={style.label} editable={false} value={selectedDate.toLocaleDateString()} />
+              </TouchableOpacity>
+              <TouchableOpacity style={{width: 120}} onPress={() => setShowTimePicker(true)}>
+                <Input title="Hora Limite:" labelStyle={style.label} editable={false} value={selectedTime.toLocaleTimeString()} />
+              </TouchableOpacity>
+            </View>
+            <CustomDateTimePicker onDateChange={handleDateChange} setshow={setShowDatePicker} show={showDatePicker} type={"date"} />
+            <CustomDateTimePicker onDateChange={handleTimeChange} setshow={setShowTimePicker} show={showTimePicker} type={"time"} />
           </View>
           <View style={style.containerFlag}>
             <Text style={style.label}>Flag</Text>
-            <View style={{}}>
-
+            <View style={style.rowFlag}>
+              {_renderFlags()}
             </View>
 
           </View>
@@ -93,6 +137,11 @@ export const style = StyleSheet.create({
   label:{
     fontWeight: "bold",
     padding: 10,
+  },
+  rowFlag:{
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 10,
+
   }
-  
 });

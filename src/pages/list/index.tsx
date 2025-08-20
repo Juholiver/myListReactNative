@@ -17,7 +17,7 @@ import { AuthContextType, PropCard } from "../../global/Props";
 
 export default function List() {
 
-  const {taskList, handleDelete} = useContext<AuthContextType>(AuthContextList);
+  const {taskList, handleDelete, handleEdit} = useContext<AuthContextType>(AuthContextList);
   const swipeableRefs = useRef<Array<Swipeable | null>>([]);
 
   const renderRightActions = () => {
@@ -36,12 +36,12 @@ export default function List() {
   };
 
   const handleSwipeOpen = (directions: "right" | "left", item: PropCard, index: number) => {
-    if (directions === "right") {
+    if (directions == "right") {
       handleDelete(item);
-      swipeableRefs.current[index]?.close();
     } else {
-      
+      handleEdit(item);
     }
+    swipeableRefs.current[index]?.close();
   }
 
   const _renderCard = (item: PropCard, index: number) => {

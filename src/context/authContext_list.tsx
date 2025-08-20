@@ -7,13 +7,13 @@ import { themas } from "../global/themes";
 import { Flag } from "../components/Flag";
 import CustomDateTimePicker from "../components/CustomDateTimePicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import { PropCard } from "../global/Props";
 
 export const AuthContextList:any = React.createContext({})
 
 const flags = [
-  {caption: "urgente", Color: themas.colors.red},
-  {caption: "opcional", Color: themas.colors.blueLigth},
+  {caption: "Urgente", Color: themas.colors.red},
+  {caption: "Opcional", Color: themas.colors.blueLigth},
 ]
 
 export const AuthProviderList = (props:any):any => {
@@ -59,12 +59,11 @@ const _renderFlags = () => {
  
     const handleSave = async () => {
       if(!title || !description || !selectedFlag ) {
-        console.log("Por favor, preencha todos os campos.");
         return alert("Por favor, preencha todos os campos.");
       }
       try {
         const newItem = {
-          item: Date.now(),
+          item: item !== 0 ? item : Date.now(),
           title,
           description,
           flag: selectedFlag,
@@ -80,7 +79,14 @@ const _renderFlags = () => {
 
         let taskList = storageData ? JSON.parse(storageData) : [];
         
-        taskList.push(newItem);
+        const itemIndex = taskList.findIndex((task: PropCard) => task.item === newItem.item);
+
+        if (itemIndex >= 0) {
+          taskList[itemIndex] = newItem;
+        } else {
+          taskList.push(newItem);
+        }
+
         await AsyncStorage.setItem(`taskList`, JSON.stringify(taskList));
         
         setTaskList(taskList);
@@ -121,7 +127,25 @@ const _renderFlags = () => {
     } catch (error) {
       console.log("Erro ao deletar item", error);
     }
-  }
+  };
+
+  const handleEdit = async (itemToEdit: PropCard) => {  
+
+    try {
+      setTitle(itemToEdit.title);
+      setDescription(itemToEdit.description);
+      setItem(itemToEdit.item);
+      setSelectedFlag(itemToEdit.flag);
+
+      const timeLimite = new Date(itemToEdit.timeLimite);
+      setSelectedDate(timeLimite);
+      setSelectedTime(timeLimite);
+
+      onOpen();
+    } catch (error) {
+      console.log("Erro ao editar item", error);
+    }
+  };
 
   const _container = () => {
     return (
@@ -163,7 +187,7 @@ const _renderFlags = () => {
   };
 
   return (
-    <AuthContextList.Provider value={{onOpen, taskList,handleDelete}}>
+    <AuthContextList.Provider value={{onOpen, taskList,handleDelete, handleEdit}}>
       {props.children}
       <Modalize
         ref={modalizeRef}
@@ -213,4 +237,4 @@ export const style = StyleSheet.create({
     marginTop: 10,
 
   }
-});
+})

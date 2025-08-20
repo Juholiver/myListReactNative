@@ -2,7 +2,7 @@ export interface AuthContextType {
   taskList: Array<PropCard>;
   onOpen: () => void;
  // handleEdit: Function;
-  //handleDelete: Function;
+  handleDelete: Function;
 }
 export type PropCard = {
   description: string;

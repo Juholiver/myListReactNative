@@ -17,7 +17,7 @@ import { AuthContextType, PropCard } from "../../global/Props";
 
 export default function List() {
 
-  const {taskList} = useContext<AuthContextType>(AuthContextList);
+  const {taskList, handleDelete} = useContext<AuthContextType>(AuthContextList);
   const swipeableRefs = useRef<Array<Swipeable | null>>([]);
 
   const renderRightActions = () => {
@@ -35,10 +35,19 @@ export default function List() {
     );
   };
 
+  const handleSwipeOpen = (directions: "right" | "left", item: PropCard, index: number) => {
+    if (directions === "right") {
+      handleDelete(item);
+      swipeableRefs.current[index]?.close();
+    } else {
+      
+    }
+  }
+
   const _renderCard = (item: PropCard, index: number) => {
     const color = item.flag == "Opcional" ? themas.colors.blueLigth : themas.colors.red;
     return (
-      <Swipeable ref={(ref) => { swipeableRefs.current[index] = ref; }} key={index} renderRightActions={renderRightActions} renderLeftActions={renderLeftActions}>
+      <Swipeable ref={(ref) => { swipeableRefs.current[index] = ref; }} key={index} renderRightActions={renderRightActions} renderLeftActions={renderLeftActions} onSwipeableOpen={(directions) => handleSwipeOpen(directions, item, index)}>
         <TouchableOpacity style={styles.card}>
           <View style={styles.rowCard}>
             <View style={styles.rowCardLeft}>

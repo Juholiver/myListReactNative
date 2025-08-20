@@ -111,6 +111,18 @@ const _renderFlags = () => {
       }
     }
 
+  const handleDelete = async (itemToDelete: { item: any; }) => {
+    try {
+      const storageData = await AsyncStorage.getItem(`taskList`);
+      const taskList = storageData ? JSON.parse(storageData) : [];
+      const updatedTaskList = taskList.filter((item: { item: any; }) => item.item !== itemToDelete.item);
+      await AsyncStorage.setItem(`taskList`, JSON.stringify(updatedTaskList));
+      setTaskList(updatedTaskList);
+    } catch (error) {
+      console.log("Erro ao deletar item", error);
+    }
+  }
+
   const _container = () => {
     return (
       <KeyboardAvoidingView style={style.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
@@ -151,7 +163,7 @@ const _renderFlags = () => {
   };
 
   return (
-    <AuthContextList.Provider value={{onOpen, taskList}}>
+    <AuthContextList.Provider value={{onOpen, taskList,handleDelete}}>
       {props.children}
       <Modalize
         ref={modalizeRef}

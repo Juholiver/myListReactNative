@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import { FlatList, Text, View, TouchableOpacity } from "react-native";
 import { styles } from "./style";
@@ -7,36 +7,21 @@ import { MaterialIcons} from "@expo/vector-icons";
 import { Ball } from "../../components/Ball";
 import { Flag } from "../../components/Flag";
 import { themas } from "../../global/themes";
+import { AuthContextList } from "../../context/authContext_list";
+// Import or define the AuthContextType
+import { AuthContextType } from "../../global/Props";
 
 type PropCard= {
   item:number,
   title:string,
   description:string,
-  flag:"Urgente" | "Importante" | "Normal"
+  flag:"Urgente" | "Opcional",
 }
-const data:Array<PropCard> = [
-  {
-    item:0,
-    title:"Realizar a licao de casa!!",
-    description:"Pagina 10 a 20",
-    flag:"Urgente"
-  },
-  {
-    item:1,
-    title:"Passear com cachorro",
-    description:"Levar a tica passear",
-    flag:"Importante"
-  },
-  {
-    item:2,
-    title:"Almoco",
-    description:"Fazer o almoco e comer",
-    flag:"Urgente"
-  },
-];
 
 
 export default function List() {
+
+  const {taskList} = useContext<AuthContextType>(AuthContextList);
 
   const _renderCard = (item: PropCard) => {
     return (
@@ -67,7 +52,7 @@ export default function List() {
       </View>
       <View style={styles.boxList}>
         <FlatList 
-          data={data}
+          data={taskList}
           style={{marginTop: 40, paddingHorizontal:30}}
           keyExtractor={(item, index) => item.item.toString()}
           renderItem={({item,index}) => {

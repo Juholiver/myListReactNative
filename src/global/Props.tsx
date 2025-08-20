@@ -4,7 +4,7 @@ export interface AuthContextType {
  // handleEdit: Function;
   //handleDelete: Function;
 }
-type PropCard = {
+export type PropCard = {
   description: string;
   item: number;
   title: string;

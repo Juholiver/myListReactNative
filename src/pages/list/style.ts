@@ -61,5 +61,21 @@ export const styles = StyleSheet.create({
    },
    descriptionCard:{
       color: themas.colors.gray,
+   },
+   button:{
+     backgroundColor: themas.colors.red,
+     borderRadius: 10,
+     alignItems: "center",
+     justifyContent: "center",  
+     width: 100,
+     marginVertical: 10,
+   },
+   buttonEdit:{
+     backgroundColor: themas.colors.blueLigth,
+     borderRadius: 10,
+     alignItems: "center",
+     justifyContent: "center",  
+     width: 100,
+     marginVertical: 10,
    }
 });

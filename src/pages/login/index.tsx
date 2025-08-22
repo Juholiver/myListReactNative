@@ -1,23 +1,31 @@
 import React from "react"; 
-import {Text, View, Image, TextInput, TouchableOpacity, Alert, ActivityIndicator} from "react-native";
+import {Text, View, Image, TouchableOpacity} from "react-native";
+import { Link } from "@react-navigation/native";
 
 import { styles } from "./styles";
 import logo from "../../assets/logo.png";
-import {MaterialIcons, Octicons} from "@expo/vector-icons";
+import {MaterialIcons} from "@expo/vector-icons";
 import { themas } from "../../global/themes";
 import { Input } from "../../components/input";
 import { Button } from "../../components/Button";
-import { useNavigation, NavigationProp } from "@react-navigation/native";
-import Routes from "../../routes/index.routes";
+import { useNavigation, NavigationProp, } from "@react-navigation/native";
 
 export default function Login() {
 
   const navigation = useNavigation<NavigationProp<any>>();
 
+  const goToSignUp = () => {
+    navigation.navigate("SignUp");
+  };
+
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(true);
   const [loading, setLoading] = React.useState(false);
+
+  function handleSignIn() {
+    getLogin();
+  }
 
 async function getLogin() {
     try {
@@ -32,6 +40,7 @@ async function getLogin() {
     }
   }
   return (
+  
     <View style={styles.container}>
       <View style={styles.boxTop}>
         <Image source={logo} style={styles.logo} resizeMode="contain"/>
@@ -59,11 +68,17 @@ async function getLogin() {
             <Button 
               text="Entrar" 
               loading={loading}
-              onPress={() => getLogin()}
+              onPress={handleSignIn}
             />
-          </View>
-        <Text style={styles.textBottom}>Não tem uma conta? <Text style={{color: themas.colors.primary}}>Cadastre-se</Text></Text>
-    </View>
-    
+        </View>
+        <TouchableOpacity
+          style={styles.buttonCreateAccount}
+          onPress={goToSignUp}
+        >
+          <Text style={styles.textBottom}>Não tem uma conta? <Text style={{color: themas.colors.primary}}>Cadastre-se</Text></Text>
+        </TouchableOpacity>
+      </View>
+
   );
 }   
+

@@ -6,6 +6,7 @@ import { AuthContextList, AuthProviderList } from "../context/authContext_list";
 
 const Tab = createBottomTabNavigator();
 
+
 export default function BottomRoutes() {
     return (
         <AuthProviderList>

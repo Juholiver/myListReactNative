@@ -58,5 +58,7 @@ export const styles = StyleSheet.create({
       color: themas.colors.gray,
       marginBottom: 50,
     },
-    
+    buttonCreateAccount: {
+      marginTop: 20,
+    },
 });

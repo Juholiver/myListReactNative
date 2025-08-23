@@ -9,6 +9,7 @@ import { themas } from "../../global/themes";
 import { Input } from "../../components/input";
 import { Button } from "../../components/Button";
 import { useNavigation, NavigationProp, } from "@react-navigation/native";
+import { supabase } from "../../Lib/supabase";
 
 export default function Login() {
 
@@ -23,22 +24,24 @@ export default function Login() {
   const [showPassword, setShowPassword] = React.useState(true);
   const [loading, setLoading] = React.useState(false);
 
-  function handleSignIn() {
-    getLogin();
-  }
+  async function handleSignIn() {
+    setLoading(true);
 
-async function getLogin() {
-    try {
-      setLoading(true);
-      if (!email  || !password ) {
-        return alert("Preencha todos os campos");
-      }
-      navigation.reset({routes:[{name:"BottomRoutes"}]});
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password
+    });
 
-    } catch (error) {
-      console.log(error)
+    if (error) {
+      alert("Erro ao fazer login");
+      setLoading(false);
+      return;
     }
+
+    setLoading(false);
+    navigation.reset({ routes: [{ name: "BottomRoutes" }] });
   }
+
   return (
   
     <View style={styles.container}>
@@ -80,5 +83,4 @@ async function getLogin() {
       </View>
 
   );
-}   
-
+}

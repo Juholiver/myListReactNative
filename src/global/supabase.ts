@@ -1,0 +1,2 @@
+export const supaUrl = 'https://kwipflzfuwwalevurkcv.supabase.co';
+export const AnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt3aXBmbHpmdXd3YWxldnVya2N2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU4ODU0MDYsImV4cCI6MjA3MTQ2MTQwNn0.ACrDFCcgawAqXPe60-RNWbzhiJQTHpZBAmSGvLEchGY';

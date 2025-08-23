@@ -1,11 +1,13 @@
 
 import React, { useState } from "react";
 
-import { View, Text, StyleSheet, ScrollView, Dimensions, Pressable, SafeAreaView, } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Dimensions, Pressable, SafeAreaView, Alert, } from "react-native";
 import { Input } from "../../../components/input";
 import { themas } from "../../../global/themes";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+
+import { supabase } from "../../../Lib/supabase";
 
 export default function SignUp() {
     const [name, setName] = useState("");
@@ -13,9 +15,31 @@ export default function SignUp() {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
 
-    function handleSignUp() {
-        console.log("SignUp", { name, email, password });
+    async function handleSignUp() {
+        setLoading(true);
+
+        const { data, error } = await supabase.auth.signUp({
+            email: email,
+            password: password,
+            options: {
+                data: {
+                    name: name
+                }
+            }
+
+        });
+
+        if (error) {
+            Alert.alert("Error", error.message);
+            setLoading(false);
+            return;
+        }
+        setLoading(false);
+        console.log("User registered successfully:", data);
+        
+
     }
+
 
     const navigation = useNavigation(); // Hook para retornar na pagina
   return (
@@ -53,7 +77,7 @@ export default function SignUp() {
             <View style={styles.boxBottom}>
                 <Pressable style={styles.button}
                     onPress={handleSignUp}>
-                    <Text style={styles.buttonText}>Cadastre-se</Text>
+                    <Text style={styles.buttonText}>{loading ? "Carregando..." : "Cadastre-se"}</Text>
                 </Pressable>
             </View>
 

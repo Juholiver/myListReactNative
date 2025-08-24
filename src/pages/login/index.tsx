@@ -1,6 +1,5 @@
 import React from "react"; 
 import {Text, View, Image, TouchableOpacity} from "react-native";
-import { Link } from "@react-navigation/native";
 
 import { styles } from "./styles";
 import logo from "../../assets/logo.png";
@@ -13,31 +12,31 @@ import { supabase } from "../../Lib/supabase";
 
 export default function Login() {
 
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [showPassword, setShowPassword] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
+
   const navigation = useNavigation<NavigationProp<any>>();
 
   const goToSignUp = () => {
     navigation.navigate("SignUp");
   };
 
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [showPassword, setShowPassword] = React.useState(true);
-  const [loading, setLoading] = React.useState(false);
 
   async function handleSignIn() {
+
     setLoading(true);
-
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signUp({
       email: email,
-      password: password
+      password: password,
     });
-
+    console.log(handleSignIn);
     if (error) {
       alert("Erro ao fazer login");
-      setLoading(false);
+      setLoading(true);
       return;
     }
-
     setLoading(false);
     navigation.reset({ routes: [{ name: "BottomRoutes" }] });
   }
@@ -53,14 +52,14 @@ export default function Login() {
             <Input
               value={email}
               onChangeText={setEmail}
-              title="Email"
+              title="email"
               IconRight={MaterialIcons}
               iconRightName="email"
             />
             <Input
               value={password}
               onChangeText={setPassword}
-              title="Senha "
+              title="password"
               IconRight={MaterialIcons}
               iconRightName="remove-red-eye"
               secureTextEntry={showPassword}
@@ -73,7 +72,7 @@ export default function Login() {
               loading={loading}
               onPress={handleSignIn}
             />
-        </View>
+          </View>
         <TouchableOpacity
           style={styles.buttonCreateAccount}
           onPress={goToSignUp}

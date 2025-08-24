@@ -36,7 +36,7 @@ export default function SignUp() {
         }
         setLoading(false);
         console.log("User registered successfully:", data);
-        
+        navigation.goBack();
 
     }
 

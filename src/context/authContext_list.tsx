@@ -26,7 +26,8 @@ export const AuthProviderList = (props:any):any => {
   const [showDatePicker, setShowDatePicker] = React.useState(false);
   const [showTimePicker, setShowTimePicker] = React.useState(false);
   const [item,setItem] = React.useState(0);
-  const [taskList, setTaskList] = React.useState([]);
+  const [taskList, setTaskList] = React.useState<PropCard[]>([]);
+  const [taskListBackup, setTaskListBackup] = React.useState<PropCard[]>([]);
 
   const onOpen = () => {
     modalizeRef?.current?.open();
@@ -90,6 +91,7 @@ const _renderFlags = () => {
         await AsyncStorage.setItem(`taskList`, JSON.stringify(taskList));
         
         setTaskList(taskList);
+        setTaskListBackup(taskList);
         setData();
         onClose();
 
@@ -112,6 +114,7 @@ const _renderFlags = () => {
         const storageData = await AsyncStorage.getItem(`taskList`);
         const taskList = storageData ? JSON.parse(storageData) : [];
         setTaskList(taskList);
+        setTaskListBackup(taskList);
       } catch (e) {
         console.log("Erro ao obter lista de tarefas", e);
       }
@@ -124,6 +127,7 @@ const _renderFlags = () => {
       const updatedTaskList = taskList.filter((item: { item: any; }) => item.item !== itemToDelete.item);
       await AsyncStorage.setItem(`taskList`, JSON.stringify(updatedTaskList));
       setTaskList(updatedTaskList);
+      setTaskListBackup(updatedTaskList);
     } catch (error) {
       console.log("Erro ao deletar item", error);
     }
@@ -145,6 +149,26 @@ const _renderFlags = () => {
     } catch (error) {
       console.log("Erro ao editar item", error);
     }
+  };
+
+  const filter = (t:string) => {
+      const array = taskListBackup;
+      const campos = ["titulo", "descricao"];
+
+      if(t){
+        const searchTerm = t.trim().toLowerCase();
+        
+        const  FilteredArray = array.filter((item: any) => {
+          for(let i=0;i<campos.length;i++){
+            if(item[campos[i]].trim().toLowerCase().includes(searchTerm)) return true;
+          }
+        });
+        
+        setTaskList(FilteredArray);
+      }else{
+        setTaskList(array);
+      }
+
   };
 
   const _container = () => {
@@ -187,7 +211,7 @@ const _renderFlags = () => {
   };
 
   return (
-    <AuthContextList.Provider value={{onOpen, taskList,handleDelete, handleEdit}}>
+    <AuthContextList.Provider value={{onOpen, taskList, handleDelete, handleEdit, filter}}>
       {props.children}
       <Modalize
         ref={modalizeRef}
